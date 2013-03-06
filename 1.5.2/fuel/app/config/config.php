@@ -16,5 +16,8 @@
  */
 
 return array(
-
+    'input_filter' => array(
+        'MyInputFilters::check_encoding',
+        'MyinputFilters::check_control',
+        ),
 );
