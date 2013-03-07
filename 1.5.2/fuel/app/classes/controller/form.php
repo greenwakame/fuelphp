@@ -47,11 +47,29 @@ class Controller_Form extends Controller_Template
         }
 
         $post = $val->validated();
-//        $data = $this->build_mail($post);
+        $post['ip_address'] = Input::ip();
+        $post['user_agent'] = Input::user_agent();
+        unset($post['submit']);
+
+        //データベースへ保存
+        $model_form = Model_Form::forge()->set($post);
+        list($id, $rows) = $model_form->save();
+
+        if ($rows != 1)
+        {
+            Log::error('データベース保存エラー', __METHOD__);
+
+            $form->repopulate();
+            $this->template->title = 'コンタクトフォーム： サーバエラー';
+            $this->template->content = View::forge('form/index');
+            $html_error = '<p>サーバでエラーが発生しました。</p>';
+            $this->template->content->set_safe('html_error', $html_error);
+            $this->template->content->set_safe('html_form', $form->build('form/confim'));
+            return;
+        }
 
         try
         {
- //           $this->sendmail($data);
             $mail = new Model_Mail();
             $mail->send($post);
             $this->template->title = 'コンタクトフォーム: 送信完了';

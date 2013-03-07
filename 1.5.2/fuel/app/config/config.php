@@ -16,8 +16,22 @@
  */
 
 return array(
+    'language' => 'ja',
+    'locale' => 'ja_JP.utf8',
+    'default_timezone' => 'Asia/Tokyo',
+
+	'Fuel\\Core\\View',
+	'Fuel\\Core\\ViewModel',
+	'Closure',
+	'Fuel\\Core\\Validation',
+
     'input_filter' => array(
         'MyInputFilters::check_encoding',
         'MyinputFilters::check_control',
         ),
+
+    'packages' => array(
+	'orm',
+	'auth',
+	),
 );
