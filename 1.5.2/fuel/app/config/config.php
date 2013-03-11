@@ -20,6 +20,10 @@ return array(
     'locale' => 'ja_JP.utf8',
     'default_timezone' => 'Asia/Tokyo',
 
+    'packages' => array(
+    'orm',
+    'auth',
+
 	'Fuel\\Core\\View',
 	'Fuel\\Core\\ViewModel',
 	'Closure',
@@ -29,9 +33,5 @@ return array(
         'MyInputFilters::check_encoding',
         'MyinputFilters::check_control',
         ),
-
-    'packages' => array(
-	'orm',
-	'auth',
 	),
 );

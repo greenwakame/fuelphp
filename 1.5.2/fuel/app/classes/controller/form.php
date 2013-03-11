@@ -2,6 +2,20 @@
 
 class Controller_Form extends Controller_Template
 {
+    public function before()
+    {
+        parent::before();
+
+        Package::load('auth');
+
+        //ログイン認証
+        if (!Auth::check())
+        {
+            Response::redirect('login/index');
+        }
+    }
+
+
     public function action_index()
     {
         $this->template->title = 'コンタクトフォーム';
