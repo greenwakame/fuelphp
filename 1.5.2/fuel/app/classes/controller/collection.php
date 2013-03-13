@@ -137,4 +137,45 @@ class Controller_Collection extends Controller_Template
             $this->template->content->set('query',$query->as_array());
         }
     }
+
+    public function action_search()
+    {
+        if (Input::post('search'))
+        {
+            var_dump($_POST);
+            //$search = '%' . Input::post('search') . '%';
+            $search = Input::post('search');
+            //検索文字を空白で区切って配列に代入
+            $keywords = preg_split('/　|\\s/',$search);
+            //配列の数だけ繰り返し処理
+            foreach($keywords as $key=>$keyword)
+            {
+                $keywords[$key] = '(TITLE LIKE "%' . $keyword . '%" OR NOTE LIKE "%' . $keyword . '%")';
+            }
+            //配列のkeywordsをANDで区切ってwhereに代入
+            $where = implode(' OR',$keywords);
+            //SQL文生成
+            $sql = sprintf("SELECT * FROM collections WHERE %s",$where);
+            var_dump($sql);
+            //SQL発行
+            $query = DB::query($sql)->execute();
+            //該当データを検索
+            //$query = DB::select()->from('collections')->where('title','LIKE',$search)->or_where('note','LIKE',$search)->execute();
+            //テンプレートファイルの呼び出し
+            $this->template->title = '検索結果ページ';
+            $this->template->content = View::forge('collection/index');
+            //テンプレートファイルに値の引渡し
+            $this->template->content->set('query',$query->as_array());
+        }
+        else
+        {
+            //降順で取得
+            $query = DB::select()->from('collections')->order_by('modified','desc')->execute();
+            //テンプレートファイル呼び出し
+            $this->template->title = 'サンプルページ';
+            $this->template->content = View::forge('collection/index');
+            //データベースをテンプレートに渡す
+            $this->template->content->set('query',$query->as_array());
+        }
+    }
 }

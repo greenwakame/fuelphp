@@ -13,7 +13,7 @@
 <div class="navbar-inner">
 <div class="container">
 <a class="brand" href="#">wakame</a>
-<form action="" method="post" class="navbar-search pull-right">
+<form action="search" method="post" class="navbar-search pull-right">
 <input name="search" type="text" class="search-query" id="search" placeholder="search">
 </form>
 </div><!--/contain-->
@@ -23,7 +23,7 @@
 <div class="row" id="content">
 <div class="span3">
 <ul class="nav nav-list">
-<li><?php echo Html::anchor('collection/index/','TOP',array('class'=>'btn'))?></li>
+<li><?php echo Html::anchor('collection/','TOP',array('class'=>'btn'))?></li>
 <li><?php echo Html::anchor('collection/add/','新規作成',array('class'=>'btn'))?></li>
 </ul>
 </div><!--/span3-->
