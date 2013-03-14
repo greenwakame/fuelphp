@@ -7,7 +7,7 @@ class Controller_Collection extends Controller_Template
         parent::before();
 
         Package::load('auth');
-
+        Package::load('orm');
         //ログイン認証
 /*        if (!Auth::check())
         {
@@ -31,7 +31,7 @@ class Controller_Collection extends Controller_Template
         //タイトルをテンプレートに渡す
         $this->template->title = 'サンプルページ';
         //Collectionsテーブルのデータを降順で取得
-        $query = DB::select()->from('collections')->limit('5')->execute();
+        $query = DB::select()->from('collections')->limit('10')->execute();
         //ビューファイルの呼び出し
         $this->template->content = View::forge('collection/index');
         //データベース情報をテンプレートに渡す
@@ -58,19 +58,43 @@ class Controller_Collection extends Controller_Template
                 'save_space'    => $save_space,
             );
 
-        //SQLの発行
-        $query = DB::insert('collections')->set($data)->execute();
-        //発行したSQLチェック
-        echo DB::last_query();
-        // indexページへ移動
-        return Response::redirect('collection/index');
-        }
-        //$this->template->title = '新規作成';
-        //$this->template->content = View::forge('collection/add');
-        //ビューの呼び出し
-        $view = View::forge('collection/add');
+            var_dump($_POST);
 
-        return $view;
+        //SQLの発行
+        //$query = DB::insert('collections')->set($data)->execute();
+        //発行したSQLチェック
+        //echo DB::last_query();
+        // indexページへ移動
+        //return Response::redirect('collection/index');
+
+            $val = Model_Collection::validate('add');
+
+            if ($val->run())
+            {
+                //SQLの発行
+                $query = DB::insert('collections')->set($data)->execute();
+
+                if ($query)
+                {
+                    //Session::set_flash('success','<span class="btn btn-primary span8">ID-'.$query->id.'の『'.$query->title.'』を追加しました</span><br>');
+                    Session::set_flash('success','保存に成功しました');
+                    Response::redirect('collection/index');
+                }
+                else
+                {
+                Session::set_flash('error','保存できませんでした');
+                }
+            }
+            else
+            {
+                Session::set_flash('error', $val->show_errors());
+            }
+        }
+        $this->template->title = '新規作成';
+        $this->template->content = View::forge('collection/add');
+        //ビューの呼び出し
+        //$view = View::forge('collection/add');
+        //return $view;
     }
 
     public function action_edit($id)
@@ -93,16 +117,48 @@ class Controller_Collection extends Controller_Template
             );
 
             //指定IDのデータを更新するSQL発行
-            $query = DB::update('collections')->set($data)->where('id',$id)->execute();
-            return Response::redirect('collection/index');
+            //$query = DB::update('collections')->set($data)->where('id',$id)->execute();
+            //return Response::redirect('collection/index');
+
+            $val = Model_Collection::validate('add');
+
+            if ($val->run())
+            {
+                //指定IDのデータを更新するSQL発行
+                $query = DB::update('collections')->set($data)->where('id',$id)->execute();
+
+                if ($query)
+                {
+                    //Session::set_flash('success','<span class="btn btn-primary span8">ID-'.$query->id.'の『'.$query->title.'』を追加しました</span><br>');
+                    Session::set_flash('success','保存に成功しました');
+                    Response::redirect('collection/index');
+                }
+                else
+                {
+                Session::set_flash('error','保存できませんでした');
+                }
+            }
+            else
+            {
+                Session::set_flash('error', $val->show_errors());
+            }
         }
 
         //POST送信されていない処理
         $query = DB::select()->from('collections')->where('id',$id)->execute();
-        $view = View::forge('collection/edit');
-        $view->set('query',$query->as_array());
+        //$view = View::forge('collection/edit');
+        //$view->set('query',$query->as_array());
 
-        return $view;
+        //return $view;
+
+        var_dump($query);
+
+        //タイトルをテンプレートに渡す
+        $this->template->title = 'データ更新ページ';
+        //ビューファイルの呼び出し
+        $this->template->content = View::forge('collection/edit');
+        //データベース情報をテンプレートに渡す
+        $this->template->content->set('query',$query->as_array());
     }
 
     public function action_detail($id)

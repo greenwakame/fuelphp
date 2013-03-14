@@ -1,3 +1,4 @@
+<?php echo '<div class="alert-success">'.Session::get_flash('success').'</div>'?>
 <h2>コレクション一覧</h2>
 <table width="100%" border="1">
 <tr>

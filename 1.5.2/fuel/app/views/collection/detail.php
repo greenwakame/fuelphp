@@ -1,6 +1,6 @@
 <?php foreach($query as $row):endforeach?>
  <div class="btn-group">
- <h3>明細ページ</h3>
+ <h3>詳細ページ</h3>
  <?php echo Html::anchor('collection/edit/'.$row['id'],'修正',array('class'=>'btn btn-success span1'))?>
  <?php echo Html::anchor('collection/delete/'.$row['id'],'削除',array('class'=>'btn btn-danger span1'))?>
  </div>

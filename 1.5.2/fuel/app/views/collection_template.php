@@ -12,7 +12,7 @@
 <div class="navbar">
 <div class="navbar-inner">
 <div class="container">
-<a class="brand" href="#">wakame</a>
+<a class="brand" href="#">FuelPHP Inquiry From</a>
 <form action="search" method="post" class="navbar-search pull-right">
 <input name="search" type="text" class="search-query" id="search" placeholder="search">
 </form>
@@ -36,7 +36,7 @@
  表示速度{exec_time}s　使用メモリ{mem_usage}mb</p>
 </div><!--/footer-->
 </div><!--/container-->
-<?php //echo Asset::js('jquery-1.7.1.min.js');?>
+<?php echo Asset::js('jquery-1.9.1.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
 </body>
 </html>
