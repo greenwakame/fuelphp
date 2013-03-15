@@ -1,6 +1,6 @@
 <?php echo '<div class="alert-success">'.Session::get_flash('success').'</div>'?>
 <h2>コレクション一覧</h2>
-<?php echo $pagination; ?>
+<?php //echo $pagination; ?>
 <table width="100%" border="1">
 <tr>
 <th scope="col">ID</th>

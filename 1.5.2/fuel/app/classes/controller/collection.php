@@ -13,13 +13,30 @@ class Controller_Collection extends Controller_Template
         {
             Response::redirect('login/index');
         }
-*/    }
+*/  }
 
     //テンプレートの指定
     public $template='collection_template';
 
     public function action_index()
     {
+        $count = DB::count_records('collections');
+
+        //var_dump($count);
+
+        $config = array(
+            'name'          => 'default',
+            'total_items'   => $count,
+            'per_page'      => 5,
+            'uri_segment'   => 'p',
+        );
+
+        $pagination = Pagination::forge('revision', $config);
+
+        var_dump($pagination->per_page);
+
+        //$this->template->content->set_safe('pagination', $pagination->render());
+
         //テーブルのデータ取得
         //$query = DB::select()->from('collections')->execute();
 
@@ -31,11 +48,18 @@ class Controller_Collection extends Controller_Template
         //タイトルをテンプレートに渡す
         $this->template->title = 'サンプルページ';
         //Collectionsテーブルのデータを降順で取得
-        $query = DB::select()->from('collections')->limit('10')->execute();
+        //$query = DB::select()->from('collections')->limit('10')->execute();
+        //ページャー用のデータを取得
+        $query = DB::select()->from('collections')
+                                 ->limit($pagination->per_page)
+                                 ->offset($pagination->offset)
+                                 ->execute();
         //ビューファイルの呼び出し
         $this->template->content = View::forge('collection/index');
         //データベース情報をテンプレートに渡す
         $this->template->content->set('query',$query->as_array());
+        //ページネーションを生成してビューにセット
+        $this->template->content->set_safe('pagination', $pagination->render());
     }
 
     public function action_add()
@@ -219,19 +243,22 @@ class Controller_Collection extends Controller_Template
             //$query = DB::select()->from('collections')->where('title','LIKE',$search)->or_where('note','LIKE',$search)->execute();
             //テンプレートファイルの呼び出し
             $this->template->title = '検索結果ページ';
-            $this->template->content = View::forge('collection/index');
+            $this->template->content = View::forge('collection/search');
             //テンプレートファイルに値の引渡し
             $this->template->content->set('query',$query->as_array());
         }
         else
         {
             //降順で取得
-            $query = DB::select()->from('collections')->order_by('modified','desc')->execute();
+            //$query = DB::select()->from('collections')->order_by('modified','desc')->execute();
             //テンプレートファイル呼び出し
-            $this->template->title = 'サンプルページ';
-            $this->template->content = View::forge('collection/index');
+            //$this->template->title = 'サンプルページ';
+            //$this->template->content = View::forge('collection/index');
             //データベースをテンプレートに渡す
-            $this->template->content->set('query',$query->as_array());
+            //$this->template->content->set('query',$query->as_array());
+            //action_index変更により下記に変更
+            Session::set_flash('error','検索に失敗もしくは検索ワードを変更してください。');
+            Response::redirect('collection/index');
         }
     }
 }
