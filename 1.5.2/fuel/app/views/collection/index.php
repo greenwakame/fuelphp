@@ -8,6 +8,7 @@
 <th scope="col">作成日</th>
 <th scope="col">コード</th>
 <th scope="col">保管場所</th>
+<th scope="col">備考欄</th>
 </tr>
 <?php foreach($query as $row):?>
 <tr>
@@ -16,6 +17,7 @@
 <td><?=$row['created']?></td>
 <td><?=$row['col_code']?></td>
 <td><?=$row['save_space']?></td>
+<td><?=$row['note']?></td>
 </tr>
 <?php endforeach;?>
 </table>

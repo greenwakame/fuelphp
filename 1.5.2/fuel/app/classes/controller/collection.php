@@ -20,10 +20,9 @@ class Controller_Collection extends Controller_Template
 
     public function action_index()
     {
-        $count = DB::count_records('collections');
-
-        //var_dump($count);
-
+        //テーブルの合計数を取得
+        $count = Model_Collection::get_count();
+        //ページネーションの設定
         $config = array(
             'name'          => 'default',
             'total_items'   => $count,
@@ -35,25 +34,11 @@ class Controller_Collection extends Controller_Template
 
         var_dump($pagination->per_page);
 
-        //$this->template->content->set_safe('pagination', $pagination->render());
-
-        //テーブルのデータ取得
-        //$query = DB::select()->from('collections')->execute();
-
-        //$view = View::forge('collection/index');
-        //$view->set('query',$query->as_array());
-
-        //return $view;
-
         //タイトルをテンプレートに渡す
-        $this->template->title = 'サンプルページ';
-        //Collectionsテーブルのデータを降順で取得
-        //$query = DB::select()->from('collections')->limit('10')->execute();
+        $this->template->title = 'コレクションページ';
+
         //ページャー用のデータを取得
-        $query = DB::select()->from('collections')
-                                 ->limit($pagination->per_page)
-                                 ->offset($pagination->offset)
-                                 ->execute();
+        $query = Model_Collection::get_all($pagination);
         //ビューファイルの呼び出し
         $this->template->content = View::forge('collection/index');
         //データベース情報をテンプレートに渡す
@@ -73,6 +58,7 @@ class Controller_Collection extends Controller_Template
             $created    = $_POST['created'];
             $col_code   = $_POST['col_code'];
             $save_space = $_POST['save_space'];
+            $note       = $_POST['note'];
 
             //連想配列にデータをセット
             $data = array(
@@ -80,33 +66,26 @@ class Controller_Collection extends Controller_Template
                 'created'       => $created,
                 'col_code'      => $col_code,
                 'save_space'    => $save_space,
+                'note'          => $note,
             );
 
             var_dump($_POST);
-
-        //SQLの発行
-        //$query = DB::insert('collections')->set($data)->execute();
-        //発行したSQLチェック
-        //echo DB::last_query();
-        // indexページへ移動
-        //return Response::redirect('collection/index');
 
             $val = Model_Collection::validate('add');
 
             if ($val->run())
             {
-                //SQLの発行
-                $query = DB::insert('collections')->set($data)->execute();
-
+                //データをデータベースへ格納
+                $query = Model_Collection::add($data);
+                //データベースへ格納出来たかチェック
                 if ($query)
                 {
-                    //Session::set_flash('success','<span class="btn btn-primary span8">ID-'.$query->id.'の『'.$query->title.'』を追加しました</span><br>');
                     Session::set_flash('success','保存に成功しました');
                     Response::redirect('collection/index');
                 }
                 else
                 {
-                Session::set_flash('error','保存できませんでした');
+                    Session::set_flash('error','保存できませんでした');
                 }
             }
             else
@@ -116,9 +95,6 @@ class Controller_Collection extends Controller_Template
         }
         $this->template->title = '新規作成';
         $this->template->content = View::forge('collection/add');
-        //ビューの呼び出し
-        //$view = View::forge('collection/add');
-        //return $view;
     }
 
     public function action_edit($id)
@@ -131,6 +107,7 @@ class Controller_Collection extends Controller_Template
             $created    = $_POST['created'];
             $col_code   = $_POST['col_code'];
             $save_space = $_POST['save_space'];
+            $note       = $_POST['note'];
 
             //連想配列にデータをセット
             $data = array(
@@ -138,28 +115,25 @@ class Controller_Collection extends Controller_Template
                 'created'       => $created,
                 'col_code'      => $col_code,
                 'save_space'    => $save_space,
+                'note'          => $note,
             );
 
-            //指定IDのデータを更新するSQL発行
-            //$query = DB::update('collections')->set($data)->where('id',$id)->execute();
-            //return Response::redirect('collection/index');
-
+            //指定されたデータを更新
             $val = Model_Collection::validate('add');
 
             if ($val->run())
             {
-                //指定IDのデータを更新するSQL発行
-                $query = DB::update('collections')->set($data)->where('id',$id)->execute();
+                //指定IDのデータを更新する
+                $query = Model_Collection::update_selection($id,$data);
 
                 if ($query)
                 {
-                    //Session::set_flash('success','<span class="btn btn-primary span8">ID-'.$query->id.'の『'.$query->title.'』を追加しました</span><br>');
                     Session::set_flash('success','保存に成功しました');
                     Response::redirect('collection/index');
                 }
                 else
                 {
-                Session::set_flash('error','保存できませんでした');
+                    Session::set_flash('error','保存できませんでした');
                 }
             }
             else
@@ -169,11 +143,7 @@ class Controller_Collection extends Controller_Template
         }
 
         //POST送信されていない処理
-        $query = DB::select()->from('collections')->where('id',$id)->execute();
-        //$view = View::forge('collection/edit');
-        //$view->set('query',$query->as_array());
-
-        //return $view;
+        $query = Model_Collection::get_selection($id);
 
         var_dump($query);
 
@@ -190,8 +160,8 @@ class Controller_Collection extends Controller_Template
         //if ($_GET)
         if(Input::method() == 'GET')
         {
-            //SQL発行
-            $query = DB::select()->from('collections')->where('id',$id)->execute();
+            //指定されたデータを取得
+            $query = Model_Collection::get_selection($id);
             //ビューの呼び出し
             $this->template->title = '詳細ページ';
             $this->template->content = View::forge('collection/detail');
@@ -204,14 +174,16 @@ class Controller_Collection extends Controller_Template
     {
         if($_POST)
         {
-            //SQL発行
-            $query = DB::delete('collections')->where('id',$id)->execute();
+            //指定したデータを削除
+            $query = Model_Collection::delete_selection($id);
             //indexページに移動
             return Response::redirect('collection/index');
         }
         else
         {
-            $query = DB::select()->from('collections')->where('id',$id)->execute();
+            //指定されたデータを取得
+            $query = Model_Collection::get_selection($id);
+            //ビューの設定
             $this->template->title = '削除ページ';
             $this->template->content = View::forge('collection/delete');
             $this->template->content->set('query',$query->as_array());
@@ -223,24 +195,9 @@ class Controller_Collection extends Controller_Template
         if (Input::post('search'))
         {
             var_dump($_POST);
-            //$search = '%' . Input::post('search') . '%';
             $search = Input::post('search');
-            //検索文字を空白で区切って配列に代入
-            $keywords = preg_split('/　|\\s/',$search);
-            //配列の数だけ繰り返し処理
-            foreach($keywords as $key=>$keyword)
-            {
-                $keywords[$key] = '(TITLE LIKE "%' . $keyword . '%" OR NOTE LIKE "%' . $keyword . '%")';
-            }
-            //配列のkeywordsをANDで区切ってwhereに代入
-            $where = implode(' OR',$keywords);
-            //SQL文生成
-            $sql = sprintf("SELECT * FROM collections WHERE %s",$where);
-            var_dump($sql);
-            //SQL発行
-            $query = DB::query($sql)->execute();
-            //該当データを検索
-            //$query = DB::select()->from('collections')->where('title','LIKE',$search)->or_where('note','LIKE',$search)->execute();
+            //指定されたデータを検索して取得
+            $query = Model_Collection::search($search);
             //テンプレートファイルの呼び出し
             $this->template->title = '検索結果ページ';
             $this->template->content = View::forge('collection/search');

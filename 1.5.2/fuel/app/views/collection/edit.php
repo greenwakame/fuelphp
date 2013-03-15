@@ -9,6 +9,11 @@
 &nbsp;</td>
  </tr>
  <tr>
+ <th scope="row">更新日</th>
+ <td><label for="created"></label>
+ <input name="created" type="text" id="created" value="<?php echo date("Y-m-d H:i:s")?>"></td>
+ </tr>
+ <tr>
  <th align="right" scope="row">コード番号：</th>
  <td><?php echo Form::input('col_code', Input::post('col_code', isset($collection) ? $collection['col_code'] : ''), array('class' => 'span6')); ?>
 &nbsp;</td>
