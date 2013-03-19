@@ -6,6 +6,10 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <?php echo Asset::css('bootstrap.min.css');?>
 <?php echo Asset::css('bootstrap-responsive.min.css');?>
+<?php echo Asset::js('nicEdit.js');?>
+<script type="text/javascript">
+bkLib.onDomLoaded(nicEditors.allTextAreas);
+</script>
 <?php //echo Asset::css('my-style.css');?>
 </head>
 <body>

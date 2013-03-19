@@ -2,6 +2,8 @@
  <div class="btn-group">
  <h3>詳細ページ</h3>
  <?php echo Html::anchor('collection/edit/'.$row['id'],'修正',array('class'=>'btn btn-success span1'))?>
+ <!--<?php echo Html::anchor('upload/'.$row['id'],'画像挿入',array('class'=>'btn btn-primary'))?>-->
+ <?php echo Html::anchor('upload/','画像挿入',array('class'=>'btn btn-primary'))?>
  <?php echo Html::anchor('collection/delete/'.$row['id'],'削除',array('class'=>'btn btn-danger span1'))?>
  </div>
  <table width="100%" border="1">

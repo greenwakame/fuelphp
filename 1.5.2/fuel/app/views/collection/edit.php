@@ -25,7 +25,7 @@
  </tr>
  <tr>
  <th align="right" scope="row">備考：</th>
- <td><?php echo Form::textarea('note', Input::post('note', isset($collection) ? $collection['note'] : ''), array('class' => 'span6', 'rows' => 8)); ?>
+ <td><?php echo Form::textarea('note', Input::post('note', isset($collection) ? $collection['note'] : ''), array('class' => 'span6', 'rows' => 8,'cols' => 40)); ?>
 &nbsp;</td>
  </tr>
  <tr>
