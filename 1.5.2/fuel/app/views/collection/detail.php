@@ -3,13 +3,14 @@
  <h3>詳細ページ</h3>
  <?php echo Html::anchor('collection/edit/'.$row['id'],'修正',array('class'=>'btn btn-success span1'))?>
  <!--<?php echo Html::anchor('upload/'.$row['id'],'画像挿入',array('class'=>'btn btn-primary'))?>-->
- <?php echo Html::anchor('upload/','画像挿入',array('class'=>'btn btn-primary'))?>
+ <?php echo Html::anchor('upload/?id=' .$row['id'],'画像挿入',array('class'=>'btn btn-primary'))?>
  <?php echo Html::anchor('collection/delete/'.$row['id'],'削除',array('class'=>'btn btn-danger span1'))?>
  </div>
  <table width="100%" border="1">
  <tr>
  <th width="20%" scope="row">ID</th>
- <td width="80%"><?=$row['id']?></td>
+ <td width="50%"><?=$row['id']?></td>
+ <td width="30%" rowspan="7"><p><?php if(isset($row['filename'])) { ?><img src="http://localhost:8888/fuelphp/1.5.2/public/uploads/<?=$row['filename']?>" ></p><?php } ?></td>
  </tr>
  <tr>
  <th scope="row">タイトル</th>

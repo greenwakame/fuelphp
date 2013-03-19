@@ -31,6 +31,9 @@ class Controller_Upload extends Controller_Template
 
     public function post_index()
     {
+        //collection_idを取得
+        $id = $_POST['id'];
+
         //アップロードクラスの設定
         $config = array(
             'path'          => DOCROOT . '/uploads/',
@@ -83,7 +86,7 @@ class Controller_Upload extends Controller_Template
             //ファイル結果をDBに保存
             foreach(Upload::get_files() as $file)
             {
-                $uqery = Model_Upload::add($file);
+                $query = Model_Upload::add($file,$id);
             }
 
             //DB保存のエラー処理

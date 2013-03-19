@@ -23,6 +23,7 @@
             );
             ?>
             <?php echo Form::file('file'); ?>
+            <?php echo Form::hidden('id', $_GET['id']); ?>
             <?php echo Form::submit('submit', 'アップロード', array('class' => 'btn')); ?>
             <?php echo Form::close(); ?>
 

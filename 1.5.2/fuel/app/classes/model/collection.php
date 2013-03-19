@@ -60,7 +60,14 @@ class Model_Collection extends Orm\Model
 
     public static function get_selection($id)
     {
-        $query = DB::select()->from('collections')->where('id',$id)->execute();
+        //$query = DB::select()->from('collections')->where('id',$id)->execute();
+        //画像表示のために変更
+        $query = DB::query('select c.id,c.title,c.created,c.modified,c.col_code,c.save_space,c.note,i.filename from collections as c , col_images as i where c.id = i.collection_id and c.id =' . $id)->execute();
+        //画像がない場合の処理
+        if (!isset($query['_as_object']))
+        {
+            $query = DB::select()->from('collections')->where('id',$id)->execute();
+        }
 
         return $query;
     }
