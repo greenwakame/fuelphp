@@ -13,7 +13,7 @@
 <div class="navbar-inner">
 <div class="container">
 <a class="brand" href="#">FuelPHP Inquiry From</a>
-<form action="search" method="post" class="navbar-search pull-right">
+<form action="http://localhost:8888/fuelphp/1.5.2/public/collection/search" method="post" class="navbar-search pull-right">
 <input name="search" type="text" class="search-query" id="search" placeholder="search">
 </form>
 </div><!--/contain-->

@@ -20,6 +20,10 @@ class Controller_Upload extends Controller_Template
 
     public function action_index()
     {
+        //検索テスト
+        //$test = Finder::search('views', 'upload/index');
+        //var_dump($test);
+
         //ビューファイルの呼び出し
         $this->template->title = 'アップロードページ';
         $this->template->content = View::forge('upload/index');
@@ -76,8 +80,21 @@ class Controller_Upload extends Controller_Template
         {
             //ファイルの保存
             Upload::save();
-            //
-            Session::set_flash('success','保存に成功しました。。');
+            //ファイル結果をDBに保存
+            foreach(Upload::get_files() as $file)
+            {
+                $uqery = Model_Upload::add($file);
+            }
+
+            //DB保存のエラー処理
+            if (!Upload::get_files(0))
+            {
+            //エラーメッセージを表示
+            Session::set_flash('error','保存に失敗しました。');
+            Response::redirect('collection/index');
+            }
+            //var_dump($images);
+            Session::set_flash('success', '保存が成功しました。');
             Response::redirect('collection/index');
         }
 

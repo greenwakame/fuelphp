@@ -32,7 +32,7 @@ class Controller_Collection extends Controller_Template
 
         $pagination = Pagination::forge('revision', $config);
 
-        var_dump($pagination->per_page);
+        //var_dump($pagination->per_page);
 
         //タイトルをテンプレートに渡す
         $this->template->title = 'コレクションページ';
